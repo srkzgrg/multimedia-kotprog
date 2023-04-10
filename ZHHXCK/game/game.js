@@ -1,4 +1,5 @@
 $('#game').hide();
+$('#gameOver').hide();
 let blokkok = new Map(); //kulcs: oszlop, érték: oszlopban lévő blokkok (String tömb)
 const szinek = ["#3bcc3e", "#386eeb", "#db1832", "#e69730"]; //z: zöld, k: kék, p: piros, s: sárga
 let mozgasiT = [0, 1, 2, 3, 4, 5, 6, 7,8,9];
@@ -20,12 +21,18 @@ let oszlop = 0;
 
 let sec = 0;
 let duration = 60;
-setInterval(timer, 1000);
+let lvl = 1;
+let nextPoint = 1250
+let lvlscore = 0;
+
 
 
 function timer() {
      time.setAttribute('value', sec++);
-     if(sec >= duration){
+     if(lvlscore >= nextPoint){
+          nexLevel();
+     }
+     else if(sec >= duration){
           dropBlock()
      }
 }
@@ -41,12 +48,41 @@ function dropBlock(){
 
 function gameOver(){
      console.log("Game OVER!")
+     $('#game').hide();
+     $('#gameOver').show();
+     let music = document.getElementById("bgmusic");
+     music.pause()
      //TODO
 }
 
 function nexLevel(){
-     score = 0;
-     duration -= 5;
+     lvl++;
+     nextPoint+=100;
+     lvlscore=0;0
+     generate();
+     sec = 0;
+     if(duration > 10){
+          duration -= 10;
+     }
+     time.setAttribute('max', duration);
+
+}
+
+function generate(){
+     let sorok = 0;
+     if(lvl < 5)  sorok = 5;
+     else if (lvl < 10) sorok = 7
+     else if (lvl < 15) sorok = 8
+     else sorok = 9;
+     for(let i = 0; i < 10; i++){
+          let oszlop = [];
+          for(let j = 0; j < sorok; j++){
+               var randomNumber = Math.floor(Math.random()*szinek.length);
+               oszlop[j] = szinek[randomNumber];
+          }
+          blokkok.set(i, oszlop);
+     }
+     draw();
 }
 function draw(map){
      for(let item of blokkok){
@@ -75,7 +111,7 @@ function brickClick(ev) {
      let erroraud = new Audio("../assets/audio/clickerro.wav");
      erroraud.volume = 0.3;
      clickaud.volume = 0.2;
-     if(blokkok.get(oszlop).length === 0)  erroraud.play();
+     if(blokkok.get(oszlop).length === 0 && !fog)  erroraud.play();
      else if(!fog && typeof blokkok.get(oszlop)[0] !== "undefined"){
          clickaud.play();
          fog_color = blokkok.get(oszlop).pop()
@@ -299,6 +335,7 @@ function check(){
      }
      if(db >= 4){
           score+=db*50;
+          lvlscore+=db*50;
           $("#pontszam").text("Pontszám: " + score);
           draw(seged)
      }else{
@@ -453,7 +490,10 @@ function drawBrick(width, height, color, x, y, mctx) {
      mctx.fillRect(x, y, width, height);
 }
 function start(){
-     charX = 450;
+     lvl = 1;
+     charX = 480;
+     sec=0;
+     setInterval(timer, 1000);
      for(let i = 0; i < 10; i++){
           let oszlop = [];
           for(let j = 0; j < 5; j++){
