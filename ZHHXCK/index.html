@@ -13,23 +13,32 @@
     <h1>Sobics [Dora edition]</h1>
     <button id="startbtn">START</button>
     <div id="imgdiv">
-    <img id="dorapng" src="../assets/Img/dora.png">
+    <img id="dorapng" src="assets/Img/dora.png">
 </div>
 </div>
 <div id="game">
     <h2 id="pontszam">Pontszám: 0</h2>
+    <h3 id="level">Szint: 1</h3>
 <div id="progressdiv">
 <progress value="0" max="60" id="pbar"></progress>
 </div>
 <audio id="bgmusic">
-    <source src="../assets/audio/bgmusic.mp3" type="audio/mpeg" />
+    <source src="assets/audio/bgmusic.mp3" type="audio/mpeg" />
 </audio>
      <div id="canvas-container">
           <canvas id="myCanvas" width="990px" height="650px"></canvas>
        </div>
 </div>
 <div id="gameOver">
-   <img src="../assets/Img/gameover.png">
+   <img src="assets/Img/gameover.png">
+    <div>
+        <form action="" id="addstat">
+            <input type="text" id="name"  placeholder="Felhasználónév: ">
+            <div>
+                <button id="submitbtn" type="submit">Mentés</button>
+            </div>
+        </form>
+    </div>
 </div>
        <script src="game.js"></script>
 </body>

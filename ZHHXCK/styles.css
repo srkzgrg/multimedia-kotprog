@@ -64,5 +64,29 @@ progress{
 }
 
 #gameOver{
+     margin-top: 8%;
      text-align: center;
+}
+
+#level{
+     color: darkgray;
+     font-size: 25px;
+}
+
+form{
+     margin-top: 5%;
+
+}
+input[type="text"]{
+     padding-left: 15px;
+     padding-top: 10px;
+     padding-bottom: 10px;
+     font-size: 25px;
+     width: 15%;
+}
+
+#submitbtn{
+     margin-top: 20px;
+     font-size: 25px;
+     width: 15%;
 }

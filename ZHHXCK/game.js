@@ -1,18 +1,20 @@
 $('#game').hide();
-$('#gameOver').hide();
+$('#start').hide();
+$('#gameOver').show();
 let blokkok = new Map(); //kulcs: oszlop, érték: oszlopban lévő blokkok (String tömb)
 const szinek = ["#3bcc3e", "#386eeb", "#db1832", "#e69730"]; //z: zöld, k: kék, p: piros, s: sárga
 let mozgasiT = [0, 1, 2, 3, 4, 5, 6, 7,8,9];
 
 let canvas = document.getElementById("myCanvas");
 let time = document.getElementById("pbar");
+let stat = document.getElementById("addstat");
 let ctx = canvas.getContext("2d");
 let fog = false;
 let fog_color = "";
 
 let score = 0;
 let img = new Image();
-img.src = "../assets/Img/dora.png"
+img.src = "./assets/Img/dora.png"
 canvas.addEventListener('mousemove', charMouseMove, false);
 canvas.addEventListener('click', brickClick, false);
 let music = true;
@@ -57,8 +59,24 @@ function gameOver(){
 
 function nexLevel(){
      lvl++;
-     nextPoint+=100;
-     lvlscore=0;0
+     mozgasiT = [0, 1, 2, 3, 4, 5, 6, 7,8,9];
+     $('#level').text("Szint: " + lvl);
+     $('#level').css("color", "red");
+     $('#level').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+     $('#level').animate({'font-size': '40px'});
+     $('#level').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+     $('#level').animate({'font-size': '25px'});
+     $('#level').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+     setTimeout(
+         function()
+         {
+              $('#level').css("color", "darkgrey");
+         }, 2000);
+
+     if(lvl < 8){
+          nextPoint+=150;
+     }
+     lvlscore=0;
      generate();
      sec = 0;
      if(duration > 10){
@@ -107,8 +125,8 @@ function draw(map){
 
 
 function brickClick(ev) {
-     let clickaud = new Audio("../assets/audio/brickaud.wav");
-     let erroraud = new Audio("../assets/audio/clickerro.wav");
+     let clickaud = new Audio("./assets/audio/brickaud.wav");
+     let erroraud = new Audio("./assets/audio/clickerro.wav");
      erroraud.volume = 0.3;
      clickaud.volume = 0.2;
      if(blokkok.get(oszlop).length === 0 && !fog)  erroraud.play();
@@ -397,10 +415,11 @@ $("#startbtn").mouseenter(animatestart);
 function animatestart(){
      $('#imgdiv').animate({margin: '+=25px'});
      $('#imgdiv').animate({margin: '-=25px'});
+
 }
 
 $("#startbtn").click(function(){
-     let startaud = new Audio("../assets/audio/startaud.wav");
+     let startaud = new Audio("./assets/audio/startaud.wav");
      startaud.volume = 0.2;
      startaud.play();
 
@@ -411,7 +430,6 @@ $("#startbtn").click(function(){
      music.volume = 0.1
      music.play();
      music.loop = true;
-
 
      start()
 
@@ -493,6 +511,7 @@ function start(){
      lvl = 1;
      charX = 480;
      sec=0;
+
      setInterval(timer, 1000);
      for(let i = 0; i < 10; i++){
           let oszlop = [];
@@ -506,6 +525,33 @@ function start(){
 
 }
 
+let lista = JSON.parse(localStorage.getItem("TopLista"));
+let sortedlist = lista.sort((p1, p2) => (p1.score > p2.score) ? -1 : (p1.score < p2.score) ? 1 : 0);
+console.log(sortedlist);
 
+stat.addEventListener("submit", (e) => {
+     e.preventDefault();
 
+     let name = document.getElementById("name");
+     if(name.value === ""){
+         //TODO
+     }else{
+          let rndnumber =  Math.floor(Math.random() * 100);
+
+          let lista = JSON.parse(localStorage.getItem("TopLista"));
+          if(!lista){
+               lista = [];
+          }else{
+               let sortedlist = lista.sort((p1, p2) => (p1.score > p2.score) ? 1 : (p1.score < p2.score) ? -1 : 0);
+          }
+          const myScore = {
+               "name": name.value,
+               "score": rndnumber
+          }
+          lista.push(myScore);
+          localStorage.setItem("TopLista", JSON.stringify(lista));
+          //TODO mentés a topscoreba
+     }
+
+});
 
