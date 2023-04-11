@@ -64,7 +64,7 @@ progress{
 }
 
 #gameOver{
-     margin-top: 8%;
+     margin-top: 4%;
      text-align: center;
 }
 
@@ -74,7 +74,7 @@ progress{
 }
 
 form{
-     margin-top: 5%;
+     margin-top: 3%;
 
 }
 input[type="text"]{
@@ -89,4 +89,24 @@ input[type="text"]{
      margin-top: 20px;
      font-size: 25px;
      width: 15%;
+}
+
+#highScore{
+     margin-top: 65px;
+}
+table{
+     font-size: 20px;
+     margin-left: auto;
+     margin-right: auto;
+     width: 30%;
+}
+table th{
+     background: #fade3b;
+}
+table td, th{
+     border: 1px solid #ddd;
+}
+#actScore p {
+     font-size: 25px;
+
 }
