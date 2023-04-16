@@ -1,5 +1,6 @@
 $('#game').hide();
 $('#gameOver').hide();
+
 getTopList();
 let blokkok = new Map(); //kulcs: oszlop, érték: oszlopban lévő blokkok (String tömb)
 const szinek = ["#3bcc3e", "#386eeb", "#db1832", "#e69730"]; //z: zöld, k: kék, p: piros, s: sárga
@@ -11,10 +12,10 @@ let stat = document.getElementById("addstat");
 let ctx = canvas.getContext("2d");
 let fog = false;
 let fog_color = "";
+let fog_db = 1;
 
 //SOUND EFFECTS
 let tictac = new Audio("./assets/audio/bomb_tictac.mp3");
-
 let music = document.getElementById("bgmusic");
 
 let score = 0;
@@ -57,7 +58,7 @@ function dropBlock(){
 function gameOver(){
      $('#game').hide();
      $('#gameOver').show();
-
+     setInterval(timer);
      music.pause()
 }
 
@@ -137,18 +138,25 @@ function brickClick(ev) {
      if(blokkok.get(oszlop).length === 0 && !fog)  erroraud.play();
      else if(!fog && typeof blokkok.get(oszlop)[0] !== "undefined"){
          clickaud.play();
-         fog_color = blokkok.get(oszlop).pop()
+
+         fog_color = blokkok.get(oszlop).pop();
+         fog_db = 1;
+         for(let i = blokkok.get(oszlop).length -1; i>=0; i--){
+              if(blokkok.get(oszlop)[i] === fog_color){
+                   fog_db ++;
+                   blokkok.get(oszlop).pop();
+              }
+              else break;
+         }
+          fog=true
          draw();
          if(fog_color === "bomb"){
               tictac.play()
               music.pause()
               ctx.drawImage(bomb, oszlop === 0 ? 15 : oszlop * 100, 556, 90, 30);
 
-         }else{
-              ctx.fillStyle = fog_color;
-              ctx.fillRect(oszlop === 0 ? 15 : oszlop * 100, 556, 90, 30);
          }
-         fog=true;
+
     }else if(fog && fog_color === "bomb"){
           tictac.pause();
           explosion.play()
@@ -161,7 +169,8 @@ function brickClick(ev) {
      else if(fog && fog_color !== "bomb"){
          clickaud.play();
          fog=false;
-         blokkok.get(oszlop).push(fog_color);
+         for(let i = 0; i < fog_db; i++) blokkok.get(oszlop).push(fog_color);
+         fog_db = 1;
          fog_color = "";
          check()
     }
@@ -181,17 +190,17 @@ function boom(){
      }
      score+=db*50;
      lvlscore+=db*50;
-     $("#pontszam").text("Pontszám: " + score);
-     $('#actScoreText').text(db*50 + " PONT");
-     $('#actScoreText').css("color", "green");
-     $('#actScoreText').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-     $('#actScoreText').animate({'font-size': '40px'});
-     $('#actScoreText').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-     $('#actScoreText').animate({'font-size': '25px'});
+     $('#pontszam').text("+" + db*50 + " PONT");
+     $('#pontszam').css("color", "green");
+     $('#pontszam').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+     $('#pontszam').animate({'font-size': '40px'});
+     $('#pontszam').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+     $('#pontszam').animate({'font-size': '25px'});
      setTimeout(
          function()
          {
-              $('#actScoreText').text("");
+              $("#pontszam").text("Pontszám: " + score);
+              $('#pontszam').css("color", "black");
          }, 2000);
      draw(seged)
 
@@ -404,18 +413,18 @@ function check(){
      if(db >= 4){
           score+=db*50;
           lvlscore+=db*50;
-          $("#pontszam").text("Pontszám: " + score);
-          $('#actScoreText').text(db*50 + " PONT");
-         $('#actScoreText').css("color", "green");
-         $('#actScoreText').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-         $('#actScoreText').animate({'font-size': '40px'});
-         $('#actScoreText').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-         $('#actScoreText').animate({'font-size': '25px'});
-         setTimeout(
-             function()
-             {
-                 $('#actScoreText').text("");
-             }, 2000);
+          $('#pontszam').text("+" + db*50 + " PONT");
+          $('#pontszam').css("color", "green");
+          $('#pontszam').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+          $('#pontszam').animate({'font-size': '40px'});
+          $('#pontszam').fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+          $('#pontszam').animate({'font-size': '25px'});
+          setTimeout(
+              function()
+              {
+                   $("#pontszam").text("Pontszám: " + score);
+                   $('#pontszam').css("color", "black");
+              }, 2000);
           draw(seged)
      }else{
           draw()
@@ -504,7 +513,7 @@ $(function () {
 function mozgasiTerulet(){
     mozgasiT = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
      for(let i = 0; i < 10; i++){
-          if(blokkok.get(i).length >= 12){
+          if(blokkok.get(i).length >= 13){
                if(oszlop > i){
                     for(let j = i; j >= 0; j--){
                          const index = mozgasiT.indexOf(j);
@@ -562,11 +571,16 @@ function drawBlocks(map){
      if(fog){
           if(fog_color === "bomb"){
                ctx.drawImage(bomb,oszlop === 0 ? 15 : oszlop * 100, 556, 90, 30);
-          }else{
-               ctx.fillStyle = fog_color;
-               ctx.fillRect(oszlop === 0 ? 15 : oszlop * 100, 556, 90, 30);
+          }else
+          {
+               for(let i = 0; i < fog_db; i++){
+                    console.log("asd")
+                    ctx.fillStyle = fog_color;
+                    ctx.fillRect(oszlop === 0 ? 15 : oszlop * 100, 556 - (i * 35), 90, 30);
+               }
+               //ctx.fillStyle = fog_color;
+               //ctx.fillRect(oszlop === 0 ? 15 : oszlop * 100, 556, 90, 30);
           }
-
      }
 }
 function drawBrick(width, height, color, x, y, mctx) {
@@ -608,8 +622,7 @@ function getTopList(){
     let lista = JSON.parse(localStorage.getItem("TopLista"));
     let sortedlist = lista.sort((p1, p2) => (p1.score > p2.score) ? -1 : (p1.score < p2.score) ? 1 : 0);
     for(let i = 0; sortedlist.length < 8 ? i < sortedlist.length : i < 8; i++){
-        let helyezes = i+1
-        let markup = "<tr><td>" + helyezes +".</td><td>" + sortedlist[i].name +"</td><td>" + sortedlist[i].score + "</td></tr>";
+        let markup = "<tr><td>" +  (i+1) +".</td><td>" + sortedlist[i].name +"</td><td>" + sortedlist[i].score + "</td></tr>";
         tableBody = $("table tbody");
         tableBody.append(markup);
     }
@@ -634,7 +647,7 @@ stat.addEventListener("submit", (e) => {
           }
           lista.push(myScore);
           localStorage.setItem("TopLista", JSON.stringify(lista));
-          //TODO mentés a topscoreba
+
      }
      getTopList()
 

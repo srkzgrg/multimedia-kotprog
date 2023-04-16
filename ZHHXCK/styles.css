@@ -1,10 +1,12 @@
-
 canvas{
      width: 990px;
      height: 650px;
      border: 1px solid black;
      background-color: bisque;
 
+}
+#pontszam{
+     font-size: 25px;
 }
 #canvas-container {
      width: 100%;
@@ -109,4 +111,17 @@ table td, th{
 #actScore p {
      font-size: 25px;
 
+}
+
+@media screen and (max-height: 1600px) {
+     #pontszam{
+          margin-top: 0px;
+          margin-bottom: -15px;
+     }
+     #level{
+          margin-bottom: 5px;
+     }
+     #progressdiv{
+          margin-bottom: 8px;
+     }
 }
