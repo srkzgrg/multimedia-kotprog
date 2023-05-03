@@ -515,6 +515,24 @@ $(".startbtn").click(function(){
      })
 });
 
+$("#backbtn").click(function (){
+     let startaud = new Audio("./assets/audio/startaud.wav");
+     startaud.volume = 0.2;
+     startaud.play();
+
+
+     $('#gameOver').hide();
+     $('#game').show();
+     music.volume = 0.1
+     music.play();
+     music.loop = true;
+
+     start()
+     html.css({
+          backgroundImage: 'url("./assets/Img/bg.png")'
+     })
+})
+
 $(".topplistabtn").click(function (){
      $('#start').hide();
      $('#gameOver').show();
