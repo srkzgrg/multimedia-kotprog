@@ -32,17 +32,18 @@ Projektmunkaként a Sobics játék saját váltazatát készítettem el. A Sobic
     
 4. Szintek
 	- A 2. szinthez 1250 pontot kell összegyűjtenünk, utána a 8. szintig minden pályán 150 ponttal többet.
+	- Az első pályán 50 mp-ként érkezik egy új sor, utána minden szinten 10 másodperccel gyorsabban jön az új sor (egészen 10 másodpercig)
 	<br>
-  | Szint  | Szükséges pont |
-  | ------------- | ------------- |
-  | 2  | 1250  |
-  | 3  | 1400  |
-  | 4  | 1550  |
-  | 5  | 1700  |
-  | 6  | 1850  |
-  | 7  | 2000  |
-  | 8  | 2150  |
-  | 9 - ∞  | 2150  |
+  | Szint  | Szükséges pont | Új sor (mp) |
+  | ------------- | ------------- | ------------- |
+  | 2  | 1250  |  40  | 
+  | 3  | 1400  |  30  |
+  | 4  | 1550  |  20  |
+  | 5  | 1700  |  10  |
+  | 6  | 1850  |  10  |
+  | 7  | 2000  |  10  |
+  | 8  | 2150  |  10  |
+  | 9 - ∞  | 2150  | 10  |
   
 2. Toplista
   - Lehetőség van elmenteni a pontszámot névvel.
